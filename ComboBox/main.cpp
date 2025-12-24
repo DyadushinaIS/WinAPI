@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <cstdio>
 #include "resource.h"
 
 CONST CHAR* g_sz_VALUES[] = { "This", "is", "my", "first","Combo","Box" };
@@ -28,7 +29,28 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
-		case IDOK: MessageBox(hwnd, "Здесь будет строка из ComboBox", "Info", MB_OK | MB_ICONINFORMATION); break;
+		case IDOK: 
+		{
+			//получаем ID ComboBox
+			HWND hCombo = GetDlgItem(hwnd, IDC_COMBO);
+			
+			//объявляем переменную и записываем в нее номер выбранной строки
+			int index = 0;
+			index= SendMessage(hCombo, CB_GETCURSEL, 0, 0);
+
+			//получаем выбранную в ComboBox строку по индексу
+			//ВОПРОС!!! Можно ли без индекса? Тут без разницы, все равно нужно выводить его, а если индекс в остальном не нужен?
+			//TODO Добавить if, если ничего не выбрано
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE] = {};
+			CHAR final_message[SIZE] = {};
+			SendMessage(hCombo, CB_GETLBTEXT, index, (LPARAM)sz_buffer);
+			//объединяем индекс и текст
+			sprintf_s(final_message, SIZE, "Выбран пункт %d с текстом %s", (index+1), sz_buffer);
+			//выводим конечное сообщение		
+			MessageBox(hwnd, final_message, "User's choice", MB_OK | MB_ICONINFORMATION);
+		}
+			 break;
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 		}
 	}
