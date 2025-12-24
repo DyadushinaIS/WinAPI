@@ -11,7 +11,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return 0;
 }
 
-BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM Wparam, LPARAM LParam)
+BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -25,6 +25,14 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM Wparam, LPARAM LParam)
 	}
 		break;
 	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+		case IDOK: MessageBox(hwnd, "Здесь будет строка из ComboBox", "Info", MB_OK | MB_ICONINFORMATION); break;
+		case IDCANCEL: EndDialog(hwnd, 0); break;
+		}
+	}
+
 		break;
 	case WM_CLOSE:
 		EndDialog(hwnd,0);
