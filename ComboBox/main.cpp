@@ -18,6 +18,9 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 	{
+		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
+		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
+		
 		HWND hCombo = GetDlgItem(hwnd, IDC_COMBO);
 		for (int i = 0; i < sizeof(g_sz_VALUES) / sizeof(g_sz_VALUES[0]); i++)
 		{
@@ -37,16 +40,24 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//объявляем переменную и записываем в нее номер выбранной строки
 			int index = 0;
 			index= SendMessage(hCombo, CB_GETCURSEL, 0, 0);
-
-			//получаем выбранную в ComboBox строку по индексу
-			//ВОПРОС!!! Можно ли без индекса? Тут без разницы, все равно нужно выводить его, а если индекс в остальном не нужен?
-			//TODO Добавить if, если ничего не выбрано
 			CONST INT SIZE = 256;
 			CHAR sz_buffer[SIZE] = {};
+			//переменная для итогового сообщения
 			CHAR final_message[SIZE] = {};
+
+			if (index!= CB_ERR)
+			//получаем выбранную в ComboBox строку по индексу, если что-то выбрано
+			//ВОПРОС!!! Можно ли без индекса? Тут без разницы, все равно нужно выводить его, а если индекс в остальном не нужен?
+			//TODO Добавить if, если ничего не выбрано
+			{ 			
 			SendMessage(hCombo, CB_GETLBTEXT, index, (LPARAM)sz_buffer);
-			//объединяем индекс и текст
+			//объединяем индекс и текст в 
 			sprintf_s(final_message, SIZE, "Выбран пункт %d с текстом %s", (index+1), sz_buffer);
+			}
+			//если ничего не выбрано
+			else
+				sprintf_s(final_message, SIZE, "ComboBox пустой, ничего не выбрано", (index + 1), sz_buffer);
+
 			//выводим конечное сообщение		
 			MessageBox(hwnd, final_message, "User's choice", MB_OK | MB_ICONINFORMATION);
 		}
