@@ -1,4 +1,4 @@
-#include <Windows.h>
+п»ї#include <Windows.h>
 #include <cstdio>
 #include "resource.h"
 
@@ -34,31 +34,31 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case IDOK: 
 		{
-			//получаем ID ComboBox
+			//РїРѕР»СѓС‡Р°РµРј ID ComboBox
 			HWND hCombo = GetDlgItem(hwnd, IDC_COMBO);
 			
-			//объявляем переменную и записываем в нее номер выбранной строки
+			//РѕР±СЉСЏРІР»СЏРµРј РїРµСЂРµРјРµРЅРЅСѓСЋ Рё Р·Р°РїРёСЃС‹РІР°РµРј РІ РЅРµРµ РЅРѕРјРµСЂ РІС‹Р±СЂР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё
 			int index = 0;
 			index= SendMessage(hCombo, CB_GETCURSEL, 0, 0);
 			CONST INT SIZE = 256;
 			CHAR sz_buffer[SIZE] = {};
-			//переменная для итогового сообщения
+			//РїРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ РёС‚РѕРіРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
 			CHAR final_message[SIZE] = {};
 
 			if (index!= CB_ERR)
-			//получаем выбранную в ComboBox строку по индексу, если что-то выбрано
-			//ВОПРОС!!! Можно ли без индекса? Тут без разницы, все равно нужно выводить его, а если индекс в остальном не нужен?
-			//TODO Добавить if, если ничего не выбрано
+			//РїРѕР»СѓС‡Р°РµРј РІС‹Р±СЂР°РЅРЅСѓСЋ РІ ComboBox СЃС‚СЂРѕРєСѓ РїРѕ РёРЅРґРµРєСЃСѓ, РµСЃР»Рё С‡С‚Рѕ-С‚Рѕ РІС‹Р±СЂР°РЅРѕ
+			//Р’РћРџР РћРЎ!!! РњРѕР¶РЅРѕ Р»Рё Р±РµР· РёРЅРґРµРєСЃР°? РўСѓС‚ Р±РµР· СЂР°Р·РЅРёС†С‹, РІСЃРµ СЂР°РІРЅРѕ РЅСѓР¶РЅРѕ РІС‹РІРѕРґРёС‚СЊ РµРіРѕ, Р° РµСЃР»Рё РёРЅРґРµРєСЃ РІ РѕСЃС‚Р°Р»СЊРЅРѕРј РЅРµ РЅСѓР¶РµРЅ?
+			//TODO Р”РѕР±Р°РІРёС‚СЊ if, РµСЃР»Рё РЅРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°РЅРѕ
 			{ 			
 			SendMessage(hCombo, CB_GETLBTEXT, index, (LPARAM)sz_buffer);
-			//объединяем индекс и текст в 
-			sprintf_s(final_message, SIZE, "Выбран пункт %d с текстом %s", (index+1), sz_buffer);
+			//РѕР±СЉРµРґРёРЅСЏРµРј РёРЅРґРµРєСЃ Рё С‚РµРєСЃС‚ РІ 
+			sprintf_s(final_message, SIZE, "Р’С‹Р±СЂР°РЅ РїСѓРЅРєС‚ %d СЃ С‚РµРєСЃС‚РѕРј %s", (index+1), sz_buffer);
 			}
-			//если ничего не выбрано
+			//РµСЃР»Рё РЅРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°РЅРѕ
 			else
-				sprintf_s(final_message, SIZE, "ComboBox пустой, ничего не выбрано", (index + 1), sz_buffer);
+				sprintf_s(final_message, SIZE, "ComboBox РїСѓСЃС‚РѕР№, РЅРёС‡РµРіРѕ РЅРµ РІС‹Р±СЂР°РЅРѕ", (index + 1), sz_buffer);
 
-			//выводим конечное сообщение		
+			//РІС‹РІРѕРґРёРј РєРѕРЅРµС‡РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ		
 			MessageBox(hwnd, final_message, "User's choice", MB_OK | MB_ICONINFORMATION);
 		}
 			 break;
