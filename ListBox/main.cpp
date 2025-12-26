@@ -3,7 +3,7 @@
 
 
 
-CONST CHAR* g_sz_VALUES[] = { "This", "is", "my", "first","List","Box" };
+CONST CHAR* g_sz_VALUES[] = { "It's", "my", "first","List","Box","not","Combo","Box" };
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM Wparam, LPARAM LParam);
 
@@ -22,7 +22,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HWND hList = GetDlgItem(hwnd, IDC_LIST);
 		for (int i = 0; i < sizeof(g_sz_VALUES) / sizeof(g_sz_VALUES[0]); i++)
 		{
-			SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)g_sz_VALUES[i]);
+			SendMessage(hList, LB_INSERTSTRING, -1, (LPARAM)g_sz_VALUES[i]); //WpARAM -1 обозначает, что ставим в конец списка
 		}
 	}
 	break;
