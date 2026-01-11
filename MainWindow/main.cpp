@@ -86,8 +86,49 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
+	{
+		HWND hStatic = CreateWindowEx
+		(
+			NULL,										    //exStyle
+			"Static",									    //Window class
+			"Этот текст создан функцией CreateWindowEx()",  //Window text SendMessage (hwnd,WM_SETTEXT...)
+			WS_CHILD|WS_VISIBLE,							//Window styles (дочернее окно)
+			10,10,											//Position
+			500,25,											//Size
+			hwnd,											//Parant Window
+			(HMENU)1000,									//ResourceID
+			GetModuleHandle (NULL),							//hInstance
+			NULL
+		);
+		HWND hEdit = CreateWindowEx
+		(
+			NULL,
+			"Edit",
+			"",
+			WS_CHILD | WS_VISIBLE|WS_BORDER,
+			10, 40,
+			500, 22,
+			hwnd,
+			(HMENU)1001,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		CreateWindowEx
+		(
+			NULL,
+			"Button",
+			"Применить",
+			WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON,
+			410,70,
+			100,25,
+			hwnd,
+			(HMENU)1002,
+			GetModuleHandle(NULL),
+			NULL
+		);
+	}
 		break;
-	case WM_SIZE:
+	case WM_SIZE:					//для отображения размера окна в заголовке окна
 	case WM_MOVE:					//для отображения координат окна в заголовке окна
 	{
 		//получаем координаты окна
@@ -105,6 +146,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 		break;
 	case WM_COMMAND:
+	{
+		switch(LOWORD(wParam))
+	case 1002:
+		{
+			CHAR sz_buffer[MAX_PATH] = {};
+			HWND hStatic = GetDlgItem(hwnd, 1000);
+			HWND hEdit = GetDlgItem(hwnd, 1001);
+			SendMessage(hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)sz_buffer);
+			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+		}
+		break;
+	}
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
