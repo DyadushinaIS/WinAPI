@@ -1,5 +1,7 @@
 #undef UNICODE
+#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
+#include <stdio.h>
 
 CONST CHAR g_sz_CLASS_NAME[] = "Main Window PV_522"; //имя класса окна
 
@@ -31,15 +33,28 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 
+	INT screen_width = GetSystemMetrics(SM_CXSCREEN);  //получаем ширину экрана в пикселях
+	INT screen_height = GetSystemMetrics(SM_CYSCREEN); //получаем высоту экрана в пикселях
+	INT window_width = screen_width * 3 / 4;           //определяем размер окна:
+	INT window_height = screen_height * 3 / 4;		   //нам надо 75% от размера экрана, значит берем размер экрана и от него 75%
+	INT window_start_x = screen_width / 8;			   //определяем начальную точку расположения окна (в условии задачи по центру)
+	INT window_start_y = screen_height / 8;			   //если окно 3/4 экрана, то 1/4 - отступы. Их два, сверху и снизу, а расположение - по центру, значит делим
+													   //эти отсупы ровно пополам, половина снизу, половина сверху, то есть 1/8 часть на каждый отступ
+	//теперь в CreateWindowEx вписываем рассчитанные параметры в начальную позицию окна и в размер окна (начальные я закомментирую, чтобы не удалять закомменитрованных)
+
+	
 	HWND hwnd = CreateWindowEx
 	(
 		NULL,             //exStyles
 		g_sz_CLASS_NAME,  //className
 		g_sz_CLASS_NAME,  //window title
 		WS_OVERLAPPEDWINDOW,   //Стиль окна, набор стилей всегда зависит от класса окна. 
-		//Стиль главного окна всегда вот этот
-		CW_USEDEFAULT, CW_USEDEFAULT, //Начальная позиция окна (при запуске)
-		CW_USEDEFAULT, CW_USEDEFAULT, //
+							   //Стиль главного окна всегда вот этот
+		
+		//CW_USEDEFAULT, CW_USEDEFAULT, //Начальная позиция окна (при запуске)
+		window_start_x,window_start_y,
+		//CW_USEDEFAULT, CW_USEDEFAULT, //Размер окна
+		window_width,window_height,
 		NULL,			//Parent Window
 		NULL,			//hMenu. Для главного окна этот параметр определяет главное меню
 		//Для дочернего окна (control) этот параметр содержить ID ресурса (RESOURCE_ID) дочергенр окна
@@ -71,6 +86,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
+		break;
+	case WM_SIZE:
+	case WM_MOVE:					//для отображения координат окна в заголовке окна
+	{
+		//получаем координаты окна
+		RECT rect;					//RECT это структура. Хранит в себе адрес левого верхнего и правого нижнего углов прямоугольника
+		GetWindowRect(hwnd,&rect);  //из документации. ПЕРЕДАЕМ АДРЕС!! &rect, а не просто rect
+		//"загоняем" информацию в заголовок окна
+		CHAR sz_title[MAX_PATH] = {};
+		sprintf
+		(
+			sz_title, "%s - Position: %ix%i, Size: %ix%i", 
+			g_sz_CLASS_NAME, rect.left, rect.top,
+			rect.right-rect.left, rect.bottom-rect.top
+		);
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_title);
+	}
 		break;
 	case WM_COMMAND:
 		break;
