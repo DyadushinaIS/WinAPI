@@ -1,5 +1,6 @@
 #undef UNICODE
 #include <Windows.h>
+#include "resource.h"
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -38,7 +39,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL,
 		g_sz_WINDOW_CLASS,
 		g_sz_WINDOW_CLASS,
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW| WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL,
@@ -64,6 +65,19 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
+	{
+		HWND hEdit = CreateWindowEx
+		(
+			NULL, "Edit",0,
+			WS_CHILD|WS_VISIBLE,
+			10,10,
+			400,22,
+			hwnd,
+			(HMENU)IDC_DISPLAY,
+			GetModuleHandle(NULL),
+			NULL
+		);
+	}
 		break;
 	case WM_COMMAND:
 		break;
@@ -72,7 +86,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
-	default:return DefWindowProc(hwnd,uMsg,lParam,wParam);
+	default:return DefWindowProc(hwnd,uMsg,wParam,lParam);
 	}
 	return FALSE;
 
