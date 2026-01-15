@@ -228,7 +228,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CHAR sz_key[8] = {};
 		sprintf(sz_key, "%i", wParam);
-		std::cout << sz_key << std::endl;
+		//std::cout << sz_key << std::endl;
 		if (GetKeyState(VK_SHIFT) < 0 && wParam == '8')
 		{
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0);
@@ -236,23 +236,18 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		else if (wParam >= '0' && wParam <= '9')
 		{
 			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, TRUE, NULL);
-			//SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - '0' + IDC_BUTTON_0), 0);
 		}
 		else if (wParam >= VK_NUMPAD0 && wParam <= VK_NUMPAD9)
 		{
 			SendMessage(GetDlgItem(hwnd, wParam - VK_NUMPAD0 + IDC_BUTTON_0), BM_SETSTATE, TRUE, NULL);
-			//SendMessage(hwnd, WM_COMMAND, LOWORD(VK_NUMPAD0 + IDC_BUTTON_0), 0);
 		}
 		switch (wParam)
 		{
-		case VK_OEM_PLUS:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0); break;
-		case VK_OEM_MINUS:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, TRUE, 0); break;
-		
+		case VK_OEM_PLUS: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0); break;
+		case VK_OEM_MINUS:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, TRUE, 0); break;
 		}
 	}
-		break;
+	break;
 	case WM_KEYUP:
 	{
 		if (GetKeyState(VK_SHIFT) < 0 && wParam == '8')
@@ -263,9 +258,13 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		else if (wParam >= '0' && wParam <= '9')
 		{
 			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, FALSE, NULL);
-			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - '0') + IDC_BUTTON_0, 0);
-
+			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - '0' + IDC_BUTTON_0), 0);
 		}
+		else if (wParam >= VK_NUMPAD0 && wParam <= VK_NUMPAD9)
+		{
+			SendMessage(GetDlgItem(hwnd, wParam - VK_NUMPAD0 + IDC_BUTTON_0), BM_SETSTATE, FALSE, 0);
+			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - VK_NUMPAD0 + IDC_BUTTON_0), 0);
+		}		
 	}
 	break;
 	case WM_DESTROY:
