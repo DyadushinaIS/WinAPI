@@ -37,14 +37,14 @@ CONST CHAR* g_sz_METAL_MISTRAL[] =
 	"ButtonsBMP\\metal_mistral\\button_7.bmp",
 	"ButtonsBMP\\metal_mistral\\button_8.bmp",
 	"ButtonsBMP\\metal_mistral\\button_9.bmp",
+	"ButtonsBMP\\metal_mistral\\button_plus.bmp",
+	"ButtonsBMP\\metal_mistral\\button_minus.bmp",
 	"ButtonsBMP\\metal_mistral\\button_aster.bmp",
+	"ButtonsBMP\\metal_mistral\\button_slash.bmp",
 	"ButtonsBMP\\metal_mistral\\button_bsp.bmp",
 	"ButtonsBMP\\metal_mistral\\button_clr.bmp",
 	"ButtonsBMP\\metal_mistral\\button_equal.bmp",
-	"ButtonsBMP\\metal_mistral\\button_minus.bmp",
-	"ButtonsBMP\\metal_mistral\\button_plus.bmp",
-	"ButtonsBMP\\metal_mistral\\button_point.bmp",
-	"ButtonsBMP\\metal_mistral\\button_slash.bmp",
+	"ButtonsBMP\\metal_mistral\\button_point.bmp"
 };
 
 CONST CHAR* g_sz_SQUARE_BLUE[] =
@@ -59,14 +59,14 @@ CONST CHAR* g_sz_SQUARE_BLUE[] =
 	"ButtonsBMP\\square_blue\\button_7.bmp",
 	"ButtonsBMP\\square_blue\\button_8.bmp",
 	"ButtonsBMP\\square_blue\\button_9.bmp",
+	"ButtonsBMP\\square_blue\\button_plus.bmp",
+	"ButtonsBMP\\square_blue\\button_minus.bmp",
 	"ButtonsBMP\\square_blue\\button_aster.bmp",
+	"ButtonsBMP\\square_blue\\button_slash.bmp",
 	"ButtonsBMP\\square_blue\\button_bsp.bmp",
 	"ButtonsBMP\\square_blue\\button_clr.bmp",
 	"ButtonsBMP\\square_blue\\button_equal.bmp",
-	"ButtonsBMP\\square_blue\\button_minus.bmp",
-	"ButtonsBMP\\square_blue\\button_plus.bmp",
 	"ButtonsBMP\\square_blue\\button_point.bmp",
-	"ButtonsBMP\\square_blue\\button_slash.bmp",
 };
 
 CONST CHAR g_OPERATIONS[] = "+-*/";
@@ -178,12 +178,13 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			for (int j = 0; j < 3; j++)
 			{
 				sz_digit[0] = i + j + '1';
+				int imageIndex = i + j + 1;
 				
 
-				CreateWindowEx
+				HWND hButton=CreateWindowEx
 				(
 					NULL, "Button", sz_digit,
-					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 					BUTTON_X_POSITION(j), BUTTON_Y_POSITION(2 - i / 3),
 					//g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*j,//X-posistion
 					//g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL)*(2 - i / 3),
@@ -193,6 +194,15 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					GetModuleHandle(NULL),
 					NULL
 				);
+				HBITMAP bmpButton = (HBITMAP)LoadImage
+				(
+					GetModuleHandle(NULL),
+					LPSTR(topic[imageIndex]),
+					IMAGE_BITMAP,
+					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+					LR_LOADFROMFILE
+				);
+				SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 			}
 		}
 		HWND hButton0 = CreateWindowEx
@@ -229,7 +239,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP bmpButtonPoint = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
-			LPSTR(topic[16]),
+			LPSTR(topic[17]),
 			IMAGE_BITMAP,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			LR_LOADFROMFILE
@@ -240,10 +250,11 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		for (int i = 0; i < 4; i++)
 		{
 			sz_operation[0] = g_OPERATIONS[3 - i];
-			CreateWindowEx
+			int imageIndex = i + 10;
+			HWND hButtonOperations = CreateWindowEx
 			(
 				NULL, "Button", sz_operation,
-				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 				BUTTON_X_POSITION(3), BUTTON_Y_POSITION(i),
 				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 				hwnd,
@@ -251,6 +262,16 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				GetModuleHandle(NULL),
 				NULL
 			);
+
+			HBITMAP bmpButtonOperations = (HBITMAP)LoadImage
+			(
+				GetModuleHandle(NULL),
+				LPSTR(topic[imageIndex]),
+				IMAGE_BITMAP,
+				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+				LR_LOADFROMFILE
+			);
+			SendMessage(hButtonOperations, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonOperations);
 		}
 		//////////////////////////////////////////////////////////////////
 		HWND hButtonBSP = CreateWindowEx
@@ -267,7 +288,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP bmpButtonBSP = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
-			LPSTR(topic[11]),
+			LPSTR(topic[14]),
 			IMAGE_BITMAP,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			LR_LOADFROMFILE
@@ -288,7 +309,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP bmpButtonCLR = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
-			LPSTR(topic[12]),
+			LPSTR(topic[15]),
 			IMAGE_BITMAP,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			LR_LOADFROMFILE
@@ -309,7 +330,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP bmpButtonEqual = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
-			LPSTR(topic[13]),
+			LPSTR(topic[16]),
 			IMAGE_BITMAP,
 			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
 			LR_LOADFROMFILE
