@@ -25,6 +25,9 @@
 #define IDC_BUTTON_CLR			1016
 #define IDC_BUTTON_EQUAL		1017
 
+#define ID_METAL_MISTRAL		1018
+#define ID_SQUARE_BLUE			1019
+
 // Следующие стандартные значения для новых объектов
 // 
 #ifdef APSTUDIO_INVOKED

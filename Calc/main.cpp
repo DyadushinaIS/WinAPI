@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #undef UNICODE
 #include<Windows.h>
+#include<Windowsx.h>
 #include<cstdio>
 #include<iostream>
 #include"resource.h"
@@ -339,6 +340,41 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	}
 	break;
+
+	
+	case WM_RBUTTONUP:
+	{
+		//координаты, чтобы открывать окно около места клика, а не где попало
+		//теоретически в любом местен наверно можно, просто константы присвоить числовые
+		POINT pt;
+		pt.x = GET_X_LPARAM(lParam);  // X-координата курсора
+		pt.y = GET_Y_LPARAM(lParam);  // Y-координата курсора
+
+		//преобразовываем в координаты окна???
+		ClientToScreen(hwnd, &pt);
+
+		//создаем само меню. Никаких параметров не нужно, пустая функция
+		HMENU hMenu = CreatePopupMenu();
+
+		//заполняем меню. ID_METALL... записываем в файл ресурсов, как с кнопками делали
+		AppendMenu(hMenu, MF_STRING, ID_METAL_MISTRAL, (LPSTR)"Тема Metal_Mistral");
+		AppendMenu(hMenu, MF_STRING, ID_SQUARE_BLUE, (LPSTR)"Тема Square_Blue");
+
+		//меню создали. Теперь его нужно вызвать
+		TrackPopupMenuEx
+		(
+			hMenu,
+			TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD,
+			pt.x, pt.y,
+			hwnd,
+			NULL
+		);
+
+	}
+	break;
+
+
+
 	////////////////////////////////////////////////////////////////////////
 	case WM_COMMAND:
 	{
