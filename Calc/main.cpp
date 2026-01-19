@@ -23,6 +23,52 @@
 #define BUTTON_X_POSITION(SHIFT)	g_i_BUTTON_START_X + (g_i_BUTTON_SIZE+g_i_INTERVAL)*(SHIFT)
 #define BUTTON_Y_POSITION(SHIFT)	g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE+g_i_INTERVAL)*(SHIFT)
 
+//#define ADDRESS						ButtonsBMP\\metal_mistral\\
+
+CONST CHAR* g_sz_METAL_MISTRAL[] = 
+{ 
+	"ButtonsBMP\\metal_mistral\\button_0.bmp",
+	"ButtonsBMP\\metal_mistral\\button_1.bmp",
+	"ButtonsBMP\\metal_mistral\\button_2.bmp",
+	"ButtonsBMP\\metal_mistral\\button_3.bmp",
+	"ButtonsBMP\\metal_mistral\\button_4.bmp",
+	"ButtonsBMP\\metal_mistral\\button_5.bmp",
+	"ButtonsBMP\\metal_mistral\\button_6.bmp",
+	"ButtonsBMP\\metal_mistral\\button_7.bmp",
+	"ButtonsBMP\\metal_mistral\\button_8.bmp",
+	"ButtonsBMP\\metal_mistral\\button_9.bmp",
+	"ButtonsBMP\\metal_mistral\\button_aster.bmp",
+	"ButtonsBMP\\metal_mistral\\button_bsp.bmp",
+	"ButtonsBMP\\metal_mistral\\button_clr.bmp",
+	"ButtonsBMP\\metal_mistral\\button_equal.bmp",
+	"ButtonsBMP\\metal_mistral\\button_minus.bmp",
+	"ButtonsBMP\\metal_mistral\\button_plus.bmp",
+	"ButtonsBMP\\metal_mistral\\button_point.bmp",
+	"ButtonsBMP\\metal_mistral\\button_slash.bmp",
+};
+
+CONST CHAR* g_sz_SQUARE_BLUE[] =
+{
+	"ButtonsBMP\\square_blue\\button_0.bmp",
+	"ButtonsBMP\\square_blue\\button_1.bmp",
+	"ButtonsBMP\\square_blue\\button_2.bmp",
+	"ButtonsBMP\\square_blue\\button_3.bmp",
+	"ButtonsBMP\\square_blue\\button_4.bmp",
+	"ButtonsBMP\\square_blue\\button_5.bmp",
+	"ButtonsBMP\\square_blue\\button_6.bmp",
+	"ButtonsBMP\\square_blue\\button_7.bmp",
+	"ButtonsBMP\\square_blue\\button_8.bmp",
+	"ButtonsBMP\\square_blue\\button_9.bmp",
+	"ButtonsBMP\\square_blue\\button_aster.bmp",
+	"ButtonsBMP\\square_blue\\button_bsp.bmp",
+	"ButtonsBMP\\square_blue\\button_clr.bmp",
+	"ButtonsBMP\\square_blue\\button_equal.bmp",
+	"ButtonsBMP\\square_blue\\button_minus.bmp",
+	"ButtonsBMP\\square_blue\\button_plus.bmp",
+	"ButtonsBMP\\square_blue\\button_point.bmp",
+	"ButtonsBMP\\square_blue\\button_slash.bmp",
+};
+
 CONST CHAR g_OPERATIONS[] = "+-*/";
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
@@ -107,12 +153,33 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 		//////////////////////////////////////////////////////////////////
+		
+		
+		INT choice_topic = 1;
+		CONST CHAR* topic[18];
+		if (choice_topic == 1)
+			{
+				for (int i = 0; i < 18; i++)
+				{
+					topic[i] = g_sz_METAL_MISTRAL[i];
+				}
+			}
+		else if (choice_topic == 2)
+		{
+			for (int i = 0; i < 18; i++)
+			{
+				topic[i] = g_sz_SQUARE_BLUE[i];
+			}
+		}
+		
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
 		{
 			for (int j = 0; j < 3; j++)
 			{
 				sz_digit[0] = i + j + '1';
+				
+
 				CreateWindowEx
 				(
 					NULL, "Button", sz_digit,
@@ -142,16 +209,16 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HBITMAP bmpButton0 = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
-			"button_0.bmp",
+			LPCSTR(topic[0]),
 			IMAGE_BITMAP,
 			g_i_DOUBLE_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			LR_LOADFROMFILE
 		);
 		SendMessage(hButton0, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton0);
-		CreateWindowEx
+		HWND hButtonPoint=CreateWindowEx
 		(
 			NULL, "Button", ".",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 			BUTTON_X_POSITION(2), BUTTON_Y_POSITION(3),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -159,6 +226,15 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		HBITMAP bmpButtonPoint = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[16]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonPoint, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonPoint);
 		//////////////////////////////////////////////////////////////////
 		CHAR sz_operation[2] = {};
 		for (int i = 0; i < 4; i++)
@@ -177,10 +253,10 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			);
 		}
 		//////////////////////////////////////////////////////////////////
-		CreateWindowEx
+		HWND hButtonBSP = CreateWindowEx
 		(
 			NULL, "Button", "<-",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(0),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -188,10 +264,20 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		CreateWindowEx
+		HBITMAP bmpButtonBSP = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[11]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonBSP, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonBSP);
+		
+		HWND hButtonCLR=CreateWindowEx
 		(
 			NULL, "Button", "C",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(1),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -199,10 +285,20 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		CreateWindowEx
+		HBITMAP bmpButtonCLR = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[12]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonCLR, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonCLR);
+
+		HWND hButtonEqual=CreateWindowEx
 		(
 			NULL, "Button", "=",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
 			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(2),
 			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
 			hwnd,
@@ -210,6 +306,16 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		HBITMAP bmpButtonEqual = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[13]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonEqual, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonEqual);
+
 	}
 	break;
 	////////////////////////////////////////////////////////////////////////
