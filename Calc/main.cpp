@@ -70,9 +70,13 @@ CONST CHAR* g_sz_SQUARE_BLUE[] =
 	"ButtonsBMP\\square_blue\\button_point.bmp",
 };
 
+INT choice_topic = 1;
+
 CONST CHAR g_OPERATIONS[] = "+-*/";
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
+VOID Creating(HWND hwnd);
+
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
@@ -155,25 +159,30 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 		//////////////////////////////////////////////////////////////////
 		
+		Creating(hwnd);
+		/*CONST CHAR* topic[18];
 		
-		INT choice_topic = 1;
-		CONST CHAR* topic[18];
-		if (choice_topic == 1)
+		switch (choice_topic)
+		{
+		case 1:
+		{
+			for (int i = 0; i < 18; i++)
 			{
-				for (int i = 0; i < 18; i++)
-				{
-					topic[i] = g_sz_METAL_MISTRAL[i];
-				}
+				topic[i] = g_sz_METAL_MISTRAL[i];
 			}
-		else if (choice_topic == 2)
+		}
+		break;
+		case 2:
 		{
 			for (int i = 0; i < 18; i++)
 			{
 				topic[i] = g_sz_SQUARE_BLUE[i];
 			}
 		}
+		break;
+		}	*/
 		
-		CHAR sz_digit[2] = {};
+		/*CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
 		{
 			for (int j = 0; j < 3; j++)
@@ -336,7 +345,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
 			LR_LOADFROMFILE
 		);
-		SendMessage(hButtonEqual, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonEqual);
+		SendMessage(hButtonEqual, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonEqual); */
 
 	}
 	break;
@@ -361,7 +370,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AppendMenu(hMenu, MF_STRING, ID_SQUARE_BLUE, (LPSTR)"Тема Square_Blue");
 
 		//меню создали. Теперь его нужно вызвать
-		TrackPopupMenuEx
+		int menuID=TrackPopupMenuEx
 		(
 			hMenu,
 			TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_RETURNCMD,
@@ -369,6 +378,33 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd,
 			NULL
 		);
+		//уничтожение меню
+		DestroyMenu(hMenu);
+		CONST CHAR* topic[18];
+		if (menuID == 1018) choice_topic = 1;
+		if (menuID == 1019) choice_topic = 2;
+			
+
+		switch (choice_topic)
+		{
+		case 1:
+		{
+			for (int i = 0; i < 18; i++)
+			{
+				topic[i] = g_sz_METAL_MISTRAL[i];
+			}
+		}
+		break;
+		case 2:
+		{
+			for (int i = 0; i < 18; i++)
+			{
+				topic[i] = g_sz_SQUARE_BLUE[i];
+			}
+		}
+		break;
+		}
+		Creating(hwnd);
 
 	}
 	break;
@@ -486,7 +522,11 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 		}
 
-		SetFocus(hwnd);
+		switch (LOWORD (wParam))
+		{
+		case ID_METAL_MISTRAL: { choice_topic = 1; Creating(hwnd); } break;
+		case ID_SQUARE_BLUE: { choice_topic = 2; Creating(hwnd);} break;
+		}
 	}
 	break;
 	////////////////////////////////////////////////////////////////////////
@@ -562,7 +602,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, wParam - VK_NUMPAD0 + IDC_BUTTON_0), BM_SETSTATE, FALSE, NULL);
 			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - VK_NUMPAD0 + IDC_BUTTON_0), 0);
 		}
-	LABEL:
+	
 		switch (wParam)
 		{
 			//case VK_OEM_PLUS:
@@ -605,4 +645,195 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	default:	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	return FALSE;
+}
+
+VOID Creating(HWND hwnd)
+{
+	
+	CONST CHAR* topic[18];
+
+	switch (choice_topic)
+	{
+	case 1:
+	{
+		for (int i = 0; i < 18; i++)
+		{
+			topic[i] = g_sz_METAL_MISTRAL[i];
+		}
+	}
+	break;
+	case 2:
+	{
+		for (int i = 0; i < 18; i++)
+		{
+			topic[i] = g_sz_SQUARE_BLUE[i];
+		}
+	}
+	break;
+	}
+	
+	CHAR sz_digit[2] = {};
+		for (int i = 6; i >= 0; i -= 3)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				sz_digit[0] = i + j + '1';
+				int imageIndex = i + j + 1;
+
+
+				HWND hButton=CreateWindowEx
+				(
+					NULL, "Button", sz_digit,
+					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+					BUTTON_X_POSITION(j), BUTTON_Y_POSITION(2 - i / 3),
+					//g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL)*j,//X-posistion
+					//g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL)*(2 - i / 3),
+					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+					hwnd,
+					HMENU(IDC_BUTTON_1 + i + j),
+					GetModuleHandle(NULL),
+					NULL
+				);
+				HBITMAP bmpButton = (HBITMAP)LoadImage
+				(
+					GetModuleHandle(NULL),
+					LPSTR(topic[imageIndex]),
+					IMAGE_BITMAP,
+					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+					LR_LOADFROMFILE
+				);
+				SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+			}
+		}
+		HWND hButton0 = CreateWindowEx
+		(
+			NULL, "Button", "0",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
+			BUTTON_X_POSITION(0), BUTTON_Y_POSITION(3),
+			g_i_DOUBLE_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			hwnd,
+			HMENU(IDC_BUTTON_0),
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HBITMAP bmpButton0 = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPCSTR(topic[0]),
+			IMAGE_BITMAP,
+			g_i_DOUBLE_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButton0, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton0);
+		HWND hButtonPoint=CreateWindowEx
+		(
+			NULL, "Button", ".",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+			BUTTON_X_POSITION(2), BUTTON_Y_POSITION(3),
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			hwnd,
+			HMENU(IDC_BUTTON_POINT),
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HBITMAP bmpButtonPoint = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[17]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonPoint, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonPoint);
+		//////////////////////////////////////////////////////////////////
+		CHAR sz_operation[2] = {};
+		for (int i = 0; i < 4; i++)
+		{
+			sz_operation[0] = g_OPERATIONS[3 - i];
+			int imageIndex = i + 10;
+			HWND hButtonOperations = CreateWindowEx
+			(
+				NULL, "Button", sz_operation,
+				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+				BUTTON_X_POSITION(3), BUTTON_Y_POSITION(i),
+				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+				hwnd,
+				HMENU(IDC_BUTTON_SLASH - i),
+				GetModuleHandle(NULL),
+				NULL
+			);
+
+			HBITMAP bmpButtonOperations = (HBITMAP)LoadImage
+			(
+				GetModuleHandle(NULL),
+				LPSTR(topic[imageIndex]),
+				IMAGE_BITMAP,
+				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+				LR_LOADFROMFILE
+			);
+			SendMessage(hButtonOperations, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonOperations);
+		}
+		//////////////////////////////////////////////////////////////////
+		HWND hButtonBSP = CreateWindowEx
+		(
+			NULL, "Button", "<-",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(0),
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			hwnd,
+			HMENU(IDC_BUTTON_BSP),
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HBITMAP bmpButtonBSP = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[14]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonBSP, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonBSP);
+
+		HWND hButtonCLR=CreateWindowEx
+		(
+			NULL, "Button", "C",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(1),
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			hwnd,
+			HMENU(IDC_BUTTON_CLR),
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HBITMAP bmpButtonCLR = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[15]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonCLR, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonCLR);
+
+		HWND hButtonEqual=CreateWindowEx
+		(
+			NULL, "Button", "=",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON|BS_BITMAP,
+			BUTTON_X_POSITION(4), BUTTON_Y_POSITION(2),
+			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
+			hwnd,
+			HMENU(IDC_BUTTON_EQUAL),
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HBITMAP bmpButtonEqual = (HBITMAP)LoadImage
+		(
+			GetModuleHandle(NULL),
+			LPSTR(topic[16]),
+			IMAGE_BITMAP,
+			g_i_BUTTON_SIZE, g_i_DOUBLE_BUTTON_SIZE,
+			LR_LOADFROMFILE
+		);
+		SendMessage(hButtonEqual, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButtonEqual);
 }
