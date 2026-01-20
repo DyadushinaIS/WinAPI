@@ -351,7 +351,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	break;
 
 	
-	case WM_RBUTTONUP:
+	case WM_CONTEXTMENU:
 	{
 		//координаты, чтобы открывать окно около места клика, а не где попало
 		//теоретически в любом местен наверно можно, просто константы присвоить числовые
