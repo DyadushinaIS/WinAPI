@@ -109,7 +109,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 		AddFontResource("Bitwise.ttf");    // Bitwise.ttf   // abduction2002.ttf  // heav.ttf
-		SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+//		SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
 		HFONT hFont = CreateFont(
 			-14,                   
 			0,                   
