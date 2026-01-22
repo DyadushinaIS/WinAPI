@@ -108,24 +108,25 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
-		AddFontResource("Heavy Data");
+		AddFontResource("Bitwise.ttf");    // Bitwise.ttf   // abduction2002.ttf  // heav.ttf
 		SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
 		HFONT hFont = CreateFont(
-			-14,                   // Высота (в логических единицах)
-			0,                   // Ширина (0 = пропорциональная)
-			0,                   // Угол наклона (0 = вертикально)
-			0,                   // Угол поворота (0 = без поворота)
-			FW_NORMAL,           // Насыщенность (400 = нормальный)
-			FALSE,               // Наклон (FALSE = без наклона)
-			FALSE,               // Подчёркивание (FALSE = нет)
-			FALSE,               // Зачёркивание (FALSE = нет)
-			RUSSIAN_CHARSET,     // Кодировка (для кириллицы)
-			OUT_DEFAULT_PRECIS,  // Точность вывода
-			CLIP_DEFAULT_PRECIS, // Точность обрезки
-			DEFAULT_QUALITY,     // Качество рендеринга
-			DEFAULT_PITCH | FF_DONTCARE, // Шаг и семейство
-			"Heavy Data"			// Имя шрифта (как в системе)
+			-14,                   
+			0,                   
+			0,                   
+			0,                   
+			FW_NORMAL,           
+			FALSE,               
+			FALSE,               
+			FALSE,               
+			DEFAULT_CHARSET,     
+			OUT_DEFAULT_PRECIS,  
+			CLIP_DEFAULT_PRECIS, 
+			DEFAULT_QUALITY,     
+			DEFAULT_PITCH | FF_DONTCARE, 
+			"Bitwise"			     //Bitwise    //Abduction2002   //Heavy Data
 		);
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 
 		//////////////////////////////////////////////////////////////////
