@@ -108,6 +108,26 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		AddFontResource("Heavy Data");
+		SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+		HFONT hFont = CreateFont(
+			-14,                   // Высота (в логических единицах)
+			0,                   // Ширина (0 = пропорциональная)
+			0,                   // Угол наклона (0 = вертикально)
+			0,                   // Угол поворота (0 = без поворота)
+			FW_NORMAL,           // Насыщенность (400 = нормальный)
+			FALSE,               // Наклон (FALSE = без наклона)
+			FALSE,               // Подчёркивание (FALSE = нет)
+			FALSE,               // Зачёркивание (FALSE = нет)
+			RUSSIAN_CHARSET,     // Кодировка (для кириллицы)
+			OUT_DEFAULT_PRECIS,  // Точность вывода
+			CLIP_DEFAULT_PRECIS, // Точность обрезки
+			DEFAULT_QUALITY,     // Качество рендеринга
+			DEFAULT_PITCH | FF_DONTCARE, // Шаг и семейство
+			"Heavy Data"			// Имя шрифта (как в системе)
+		);
+
+
 		//////////////////////////////////////////////////////////////////
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
@@ -213,10 +233,17 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 		);
 		SetSkin (hwnd, "square_blue");
+		HDC hdc = GetDC(hwnd);
+		SetBkMode(hdc, OPAQUE);
+		SetBkColor(hdc, RGB(0, 0, 200));
+		SetTextColor(hdc, RGB(200, 200, 200));
+		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
+		SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
+		SendMessage(hwnd, WM_ERASEBKGND, WPARAM(hdc), 0);
 	}
 	break;
 	////////////////////////////////////////////////////////////////////////
-	case WM_CTLCOLOREDIT:
+/*	case WM_CTLCOLOREDIT:
 	{
 		HDC hdc = (HDC)wParam;   //Handler to Device Context
 		//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
@@ -226,11 +253,11 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
 		SetBkColor(hdc, RGB(0, 0, 200));
 		SetTextColor(hdc, RGB(200, 200, 200));
-		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
+		HBRUSH hBackground = CreateSolidBrush(RGB(99, 50, 200));
 		SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
 		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
 	}
-	break;
+	break;  */
 	////////////////////////////////////////////////////////////////////////
 	case WM_COMMAND:
 	{
@@ -472,7 +499,7 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDR_SQUARE_BLUE:SetSkin(hwnd, "square_blue"); break;
 		case IDR_METAL_MISTRAL:SetSkin(hwnd, "metal_mistral"); break;
 		case IDR_EXIT:SendMessage(hwnd, WM_CLOSE, 0, 0); break;
-		}
+		} 
 		DestroyMenu(hMenu);
 	}
 	break;
@@ -527,15 +554,11 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 				LR_LOADFROMFILE
 			);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
-
-	/*	if (sz_skin == "square_blue")
+	}
+	if (sz_skin == "square_blue")
 		{
-			HDC hdc = GetDC(hwnd);  //Handler to Device Context
-			//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
-			//позволяющий применять к этому устройствуц графические фуекции
-			//В ОС Windows абсолютно для любого окна можно получить контекст устройства
-			//при помощи функции GetDC(HWND)
-			SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
+			HDC hdc = GetDC(hwnd);  
+			SetBkMode(hdc, OPAQUE); 
 			SetBkColor(hdc, RGB(0, 0, 200));
 			SetTextColor(hdc, RGB(200, 200, 200));
 			HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
@@ -543,21 +566,13 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 			SendMessage(hwnd, WM_ERASEBKGND, WPARAM(hdc), 0);
 		}
 
-		if (sz_skin == "metal_mistral")
+	if (sz_skin == "metal_mistral")
 		{
-			HDC hdc = GetDC(hwnd);  //Handler to Device Context
-			//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
-			//позволяющий применять к этому устройствуц графические фуекции
-			//В ОС Windows абсолютно для любого окна можно получить контекст устройства
-			//при помощи функции GetDC(HWND)
-			SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
+			HDC hdc = GetDC(hwnd);
 			SetBkColor(hdc, RGB(0, 50, 200));
 			SetTextColor(hdc, RGB(200, 50, 200));
-			HBRUSH hBackground = CreateSolidBrush(RGB(0, 50, 200));
+			HBRUSH hBackground = CreateSolidBrush(RGB(200, 0, 0));
 			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
 			SendMessage(hwnd, WM_ERASEBKGND, WPARAM(hdc), 0);
 		}
-		*/
-
-	}
 }
