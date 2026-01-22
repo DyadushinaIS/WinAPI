@@ -527,5 +527,37 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 				LR_LOADFROMFILE
 			);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+
+	/*	if (sz_skin == "square_blue")
+		{
+			HDC hdc = GetDC(hwnd);  //Handler to Device Context
+			//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
+			//позволяющий применять к этому устройствуц графические фуекции
+			//В ОС Windows абсолютно для любого окна можно получить контекст устройства
+			//при помощи функции GetDC(HWND)
+			SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
+			SetBkColor(hdc, RGB(0, 0, 200));
+			SetTextColor(hdc, RGB(200, 200, 200));
+			HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
+			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
+			SendMessage(hwnd, WM_ERASEBKGND, WPARAM(hdc), 0);
+		}
+
+		if (sz_skin == "metal_mistral")
+		{
+			HDC hdc = GetDC(hwnd);  //Handler to Device Context
+			//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
+			//позволяющий применять к этому устройствуц графические фуекции
+			//В ОС Windows абсолютно для любого окна можно получить контекст устройства
+			//при помощи функции GetDC(HWND)
+			SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
+			SetBkColor(hdc, RGB(0, 50, 200));
+			SetTextColor(hdc, RGB(200, 50, 200));
+			HBRUSH hBackground = CreateSolidBrush(RGB(0, 50, 200));
+			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
+			SendMessage(hwnd, WM_ERASEBKGND, WPARAM(hdc), 0);
+		}
+		*/
+
 	}
 }
