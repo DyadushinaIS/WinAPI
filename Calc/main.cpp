@@ -24,7 +24,14 @@
 #define BUTTON_Y_POSITION(SHIFT)	g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE+g_i_INTERVAL)*(SHIFT)
 
 CONST CHAR g_OPERATIONS[] = "+-*/";
-CONST CHAR* g_SKINS[] = { "metal_mistral","square_blue" };
+enum Skin{SquareBlue,MetalMistral};
+enum Color{MainBackground,DisplayBackground,Font};
+CONST CHAR* g_SKINS[] = {"square_blue","metal_mistral" };
+CONST COLORREF g_COLORS[2][3] =
+{
+	{RGB(0,0,200), RGB(0,0,100),RGB(200,200,200)},
+	{RGB(100,100,100), RGB(50,50,50),RGB(50,200,50)}
+};
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -87,6 +94,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	static Skin skin = Skin::SquareBlue;
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -220,13 +228,16 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		HDC hdc = (HDC)wParam;   //Handler to Device Context
 		//Контекст устройства - это набор ресурсов, привязанных к определенному устройству,
-		//позволяющий применять к этому устройствуц графические фуекции
+		//позволяющий применять к этому устройству графические фуекции
 		//В ОС Windows абсолютно для любого окна можно получить контекст устройства
 		//при помощи функции GetDC(HWND)
-		SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
-		SetBkColor(hdc, RGB(0, 0, 200));
-		SetTextColor(hdc, RGB(200, 200, 200));
-		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
+		//SetBkMode(hdc, OPAQUE);   //задаем непрозрачный режим отображения hEditDisplay
+		HBRUSH hBackground = CreateSolidBrush(g_COLORS[skin][Color::MainBackground]);
+		SetBkColor(hdc, g_COLORS[skin][Color::DisplayBackground]);
+		SetTextColor(hdc, g_COLORS[skin][Color::Font]);
+		//SetBkColor(hdc, RGB(0, 0, 200));
+		//SetTextColor(hdc, RGB(200, 200, 200));
+		//HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));
 		SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
 		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
 	}
@@ -474,6 +485,12 @@ LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDR_EXIT:SendMessage(hwnd, WM_CLOSE, 0, 0); break;
 		}
 		DestroyMenu(hMenu);
+		skin = Skin(item - IDR_SQUARE_BLUE);
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_DISPLAY);
+		HDC hdc = GetDC(hwnd);
+		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdc, (LPARAM)hEditDisplay);
+		ReleaseDC(hwnd, hdc);
+		SetFocus(hEditDisplay);
 	}
 	break;
 	case WM_DESTROY:
